@@ -1,27 +1,37 @@
-import { Server, Socket } from 'socket.io';
 import ENV from './.env.json';
 import { Client, Team } from './client';
 import { hintsBlue, hintsOrange, init, points, resetPoints, scorePoints, tries, updateHints, wordToGuess } from './game';
 import { getRandomWord } from './words';
 
+import { Server, Socket } from 'socket.io';
+import fs from 'fs';
+import https from 'https';
+
+// Initialize the server
+const httpsServer = https.createServer({
+    key: fs.readFileSync('./.key.pem'),
+    cert: fs.readFileSync('./.cert.pem'),
+});
+
+export const io = new Server(httpsServer, {
+    cors: {
+        origin: "https://localhost:1234",
+    }});
+
+httpsServer.listen(ENV.port, () => {
+    console.log(`Listening on https://${ENV.serverAdress}:${ENV.port}`);
+});
+
+// io.listen(ENV.port);
+
+// console.log("----------------------------------------------");
+// console.log(`Server started at http://localhost:${ENV.port}`);
+// console.log("----------------------------------------------");
+
 
 // Clients
 const clients = new Map<string, Client>();
 
-
-// Initialize the server
-export const io = new Server({
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
-});
-
-io.listen(ENV.port);
-
-console.log("----------------------------------------------");
-console.log(`Server started at http://localhost:${ENV.port}`);
-console.log("----------------------------------------------");
 
 init(getRandomWord());
 

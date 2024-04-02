@@ -3,3 +3,5 @@ dist
 .parcel-cache
 .vscode
 src/.env.json
+.cert.pem
+.key.pem
