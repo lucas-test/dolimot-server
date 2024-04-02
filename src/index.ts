@@ -9,17 +9,17 @@ import https from 'https';
 
 // Initialize the server
 const httpsServer = https.createServer({
-    key: fs.readFileSync('./.key.pem'),
-    cert: fs.readFileSync('./.cert.pem'),
+    key: fs.readFileSync(ENV.keyPath),
+    cert: fs.readFileSync(ENV.certPath),
 });
 
 export const io = new Server(httpsServer, {
     cors: {
-        origin: "https://localhost:1234",
+        origin: ENV.corsOrigin,
     }});
 
 httpsServer.listen(ENV.port, () => {
-    console.log(`Listening on https://${ENV.serverAdress}:${ENV.port}`);
+    console.log(`Listening on https://localhost:${ENV.port}`);
 });
 
 // io.listen(ENV.port);
